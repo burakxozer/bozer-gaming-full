@@ -1,0 +1,132 @@
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+    output = "/home/ubuntu/bozer_gaming/nextjs_space/node_modules/.prisma/client"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  email         String    @unique
+  passwordHash  String
+  emailVerified Boolean   @default(false)
+  profilePic    String?   // cloud_storage_path or preset key like "avatar_1"
+  profilePicPublic Boolean @default(false)
+  theme         String    @default("steel")
+  role          String    @default("user") // "user" | "admin"
+  createdAt     DateTime  @default(now())
+  lastSeen      DateTime  @default(now())
+
+  sessions         Session[]
+  gameStats        GameStat[]
+  sentRequests     FriendRequest[] @relation("SentRequests")
+  receivedRequests FriendRequest[] @relation("ReceivedRequests")
+  friends1         Friendship[]    @relation("User1Friends")
+  friends2         Friendship[]    @relation("User2Friends")
+  activeGame       ActiveGame?
+  emailTokens      EmailToken[]
+  gameSessions     GameSession[]
+  sentMessages     Message[]       @relation("SentMessages")
+  receivedMessages Message[]       @relation("ReceivedMessages")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([expiresAt])
+}
+
+model EmailToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  type      String   // "verify" | "reset" | "username"
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+}
+
+model GameStat {
+  id         String   @id @default(cuid())
+  userId     String
+  gameName   String
+  playCount  Int      @default(1)
+  lastPlayed DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameName])
+}
+
+model ActiveGame {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  gameName  String
+  gameLabel String
+  snapshot  String?  @db.Text // latest live HTML snapshot for spectating
+  state     String?  @db.Text // latest serialized game state
+  startedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model GameSession {
+  id        String   @id @default(cuid())
+  userId    String
+  gameName  String
+  gameLabel String
+  name      String   // user-provided name to differentiate saved games
+  state     String?  @db.Text // serialized game state for resuming
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  content    String   @db.Text
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([senderId, receiverId])
+  @@index([receiverId, read])
+}
+
+model FriendRequest {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+  sender     User     @relation("SentRequests", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User     @relation("ReceivedRequests", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([receiverId, status])
+}
+
+model Friendship {
+  id        String   @id @default(cuid())
+  user1Id   String
+  user2Id   String
+  createdAt DateTime @default(now())
+  user1     User     @relation("User1Friends", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User     @relation("User2Friends", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  @@unique([user1Id, user2Id])
+}

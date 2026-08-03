@@ -1,0 +1,301 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================= THEMES ================= */
+:root,
+[data-theme="steel"] {
+  --bg: #1a1d21;
+  --panel: #23272e;
+  --card: #2b3038;
+  --accent: #f97316;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #3f3f46;
+  --bg-gradient: radial-gradient(circle at top, #2b3038, #1a1d21);
+}
+
+[data-theme="dark"] {
+  --bg: #0b1220;
+  --panel: #111827;
+  --card: #020617;
+  --accent: #22c55e;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #1f2937;
+  --bg-gradient: radial-gradient(circle at top, #020617, #0b1220);
+}
+
+[data-theme="light"] {
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --card: #ffffff;
+  --accent: #2563eb;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --bg-gradient: #f4f6f8;
+}
+
+[data-theme="green"] {
+  --bg: #0b2e1a;
+  --panel: #0f3d25;
+  --card: #134e32;
+  --accent: #22c55e;
+  --text: #e6fffa;
+  --muted: #a7f3d0;
+  --border: #166534;
+  --bg-gradient: radial-gradient(circle at top, #134e32, #0b2e1a);
+}
+
+[data-theme="purple"] {
+  --bg: #1b102d;
+  --panel: #2a174a;
+  --card: #3b1f6b;
+  --accent: #a855f7;
+  --text: #f5f3ff;
+  --muted: #ddd6fe;
+  --border: #6d28d9;
+  --bg-gradient: radial-gradient(circle at top, #3b1f6b, #1b102d);
+}
+
+[data-theme="red"] {
+  --bg: #2a0b0b;
+  --panel: #3b0f0f;
+  --card: #4c1414;
+  --accent: #ef4444;
+  --text: #fee2e2;
+  --muted: #fecaca;
+  --border: #7f1d1d;
+  --bg-gradient: radial-gradient(circle at top, #4c1414, #2a0b0b);
+}
+
+[data-theme="midnight"] {
+  --bg: #020617;
+  --panel: #020c2a;
+  --card: #020e3a;
+  --accent: #38bdf8;
+  --text: #e0f2fe;
+  --muted: #7dd3fc;
+  --border: #1e3a8a;
+  --bg-gradient: radial-gradient(circle at top, #020e3a, #020617);
+}
+
+/* ================= BASE ================= */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg-gradient, var(--bg));
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Suppress hydration warnings */
+[data-hydration-error] {
+  display: none !important;
+}
+
+/* ================= SCROLLBAR ================= */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+/* ================= ANIMATIONS ================= */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+.animate-modal-in {
+  animation: modalIn 0.25s ease;
+}
+
+/* ================= GAME CARD ================= */
+.game-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.45);
+  transition: transform 0.25s cubic-bezier(0.2,0.8,0.2,1),
+              box-shadow 0.25s cubic-bezier(0.2,0.8,0.2,1);
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 26px 56px rgba(0,0,0,0.65);
+  }
+}
+
+.game-card:active {
+  transform: scale(0.98);
+}
+
+/* ================= BUTTONS ================= */
+.btn-accent {
+  width: 100%;
+  margin-top: 14px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  background: var(--accent);
+  color: #000;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.15s;
+}
+
+.btn-accent:active {
+  transform: scale(0.97);
+  filter: brightness(0.95);
+}
+
+.btn-gray {
+  width: 100%;
+  margin-top: 14px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  background: #334155;
+  color: #fff;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.15s;
+}
+
+.btn-gray:active {
+  transform: scale(0.97);
+  filter: brightness(0.95);
+}
+
+/* ================= FEATURE TAGS ================= */
+.feature-tag {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* ================= MODAL ================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-card {
+  background: var(--card);
+  color: var(--text);
+  border-radius: 18px;
+  padding: 20px;
+  max-width: 520px;
+  width: 92%;
+  max-height: 80vh;
+  overflow: auto;
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  position: relative;
+  animation: modalIn 0.25s ease;
+}
+
+/* ================= FORM ================= */
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: var(--accent);
+}
+
+.form-input::placeholder {
+  color: var(--muted);
+}
+
+/* ================= CONTINUE CARD ================= */
+.continue-card {
+  border: 1px dashed var(--accent) !important;
+}
+
+/* ================= SETTINGS ================= */
+.settings-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  width: 260px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* ================= VIDEO CTA ================= */
+.video-cta {
+  margin-top: 32px;
+  padding: 22px;
+  border-radius: 20px;
+  border: 1px dashed var(--border);
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+/* ================= TOAST ================= */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-toast-in {
+  animation: toastIn 0.3s ease;
+}
